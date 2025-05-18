@@ -5,43 +5,10 @@ const cors = require('cors');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY); // load from .env
 const app = express();
 
-// Specific CORS configuration for development and production
-const allowedOrigins = [
-  'http://localhost:5175', // Your local React frontend
-  'http://localhost:3000',  // Common React development port
-  'https://reliance.orbits-it.com',
-  'https://reliance.orbits-it.com/wp-content/themes/your-theme/react-app'
-];
-
-app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps, Postman, or curl requests)
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      console.log('CORS blocked for:', origin);
-      callback(new Error('Not allowed by CORS policy'));
-    }
-  },
-  methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
-}));
-
-// Handle OPTIONS preflight requests
-app.options('*', cors({
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS policy'));
-    }
-  }
-}));
-
+app.use(cors());
 app.use(express.json());
+
+
 
 const FRONTEND_URL = process.env.FRONTEND_URL || 'https://reliance.orbits-it.com/wp-content/themes/your-theme/react-app';
 
@@ -123,7 +90,9 @@ app.post('/create-checkout-session', async (req, res) => {
                 motorBike: booking.details.motorBike || '',
                 piano: booking.details.piano || '',
                 specialRequirements: booking.details.specialRequirements || '',
+
             }
+
         });
         res.json({ sessionId: session.id });
     } catch (error) {
@@ -133,8 +102,7 @@ app.post('/create-checkout-session', async (req, res) => {
     }
 });
 
-const PORT = process.env.PORT || 5000;
-
+const PORT = 5000;
 app.get('/checkout-session/:id', async (req, res) => {
     try {
         const session = await stripe.checkout.sessions.retrieve(req.params.id);
@@ -143,11 +111,6 @@ app.get('/checkout-session/:id', async (req, res) => {
         console.error(error);
         res.status(500).json({ error: 'Invalid session ID' });
     }
-});
-
-// Add a simple health check endpoint
-app.get('/health', (req, res) => {
-    res.status(200).json({ status: 'ok' });
 });
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
