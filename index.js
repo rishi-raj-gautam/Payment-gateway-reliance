@@ -94,9 +94,7 @@ app.post('/create-checkout-session', async (req, res) => {
             }
 
         });
-        // res.json({ sessionId: session.id });
-        res.json({ sessionId: session.id, url: session.url });
-
+        res.json({ sessionId: session.id });
     } catch (error) {
         console.error('Stripe error details:', error.message);
         console.error('Stripe session creation failed:', error);
