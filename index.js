@@ -94,7 +94,7 @@ app.post('/create-checkout-session', async (req, res) => {
             }
             
         });
-        console.log("metadata (backend): ", metadata);
+        
         res.json({ sessionId: session.id });
     } catch (error) {
         console.error('Stripe error details:', error.message);
