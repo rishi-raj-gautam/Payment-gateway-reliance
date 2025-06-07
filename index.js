@@ -10,7 +10,7 @@ app.use(express.json());
 
 
 
-const FRONTEND_URL = 'http://localhost:5174/';
+const FRONTEND_URL = 'https://reliancemove.com/wp-content/themes/your-theme/react-app';
 
 app.post('/create-checkout-session', async (req, res) => {
     const booking = req.body;
@@ -33,7 +33,7 @@ app.post('/create-checkout-session', async (req, res) => {
                 quantity: 1,
             }],
             mode: 'payment',
-            success_url:`${FRONTEND_URL}/#/payment-success?session_id={CHECKOUT_SESSION_ID}`,
+            success_url: `${FRONTEND_URL}/#/payment-success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${FRONTEND_URL}/#/payment-failed`,
             metadata: {
                 email: booking.email || 'NA',
