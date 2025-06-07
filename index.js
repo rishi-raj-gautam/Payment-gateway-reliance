@@ -10,7 +10,7 @@ app.use(express.json());
 
 
 
-const FRONTEND_URL = 'https://reliancemove.com/wp-content/themes/your-theme/react-app';
+const FRONTEND_URL = process.env.FRONTEND_URL || 'https://reliancemove.com/wp-content/themes/your-theme/react-app';
 
 app.post('/create-checkout-session', async (req, res) => {
     const booking = req.body;
